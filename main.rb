@@ -3,24 +3,44 @@ require 'jekyll'
 require 'JSON'
 require 'netaddr'
 require 'net/http'
+require 'socket'
+require  'yaml'
 
-# Set up and globals
+# Set up and globals and process things
 configure do
-  set :DEPLOY_DIR, "/User/michael/test-site"
+  config = YAML.load_file ".config.yml"
+  config = config[0]
+  if config["DEPLOY_DIR"] != nil
+    set :DEPLOY_DIR, config["DEPLOY_DIR"]
+  else
+    set :DEPLOY_DIR, "~/_site"
+  end
 
-  # This is slow and probably not needed
-  puts "Getting address information..."
-  ip = Net::HTTP.get(URI.parse('http://ifconfig.me/ip'))
-  host = Net::HTTP.get(URI.parse('http://ifconfig.me/host'))
+  dir = "./pids/"
+  file = dir + "sinatra"
+  Dir.mkdir(dir) unless File.exists?(dir)
+  if File.exists?(file)
+    File.delete(file)
+  end
+  File.open(file, 'w+') do |f|
+    f.write(Process.pid.to_s)
+  end
 
-  ip.delete!("\n")
-  host.delete!("\n")
-
-  puts "Have your webhook point to #{host}:#{settings.port} - #{ip}:#{settings.port}"
   puts "Your site will deploy to #{settings.DEPLOY_DIR}"
-
 end
 
+Signal.trap("USR1") do
+  puts "Restart? Lol"
+end
+
+Signal.trap("INT") do
+  puts "[Crazytrain Daemon] Shutting down..."
+  if File.exists?("./pids/sinatra")
+    File.delete("./pids/sinatra")
+  end
+end
+
+# The bit that make it happen
 post '/' do
 
   body = JSON.parse request.body.read
@@ -28,13 +48,13 @@ post '/' do
 
   check_ip = Net::HTTP.get(URI.parse('https://api.github.com/meta'))
   valid_ips = JSON.parse(check_ip)
-  mask = valid_ips["hooks"]
+  mask = valid_ips["hooks"][0]
   puts mask
   netmask = NetAddr::CIDR.create(mask)
 
   # Make sure it's github!
   if netmask.contains?(request.ip) and user_agent =~ /^GitHub Hookshot/ and body["ref"] == "refs/heads/master"
-    puts "Starting Deplay"
+    puts "Starting Deploy..."
 
     # To the temp dir! And clone
     tmpdir = "/tmp/" + body["after"]
@@ -51,6 +71,7 @@ post '/' do
       'source'      => tmpdir,
       'destination' => settings.DEPLOY_DIR
     })
+    puts "Building site..."
     Jekyll::Site.new(conf).process
 
     # Let's get out of here.
