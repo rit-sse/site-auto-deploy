@@ -11,7 +11,7 @@ case "$1" in
         ;;
     stop)
         echo "Stopping...";
-        echo "=======================End========================" >> ./log/deploy_log
+        echo "=======================E========================" >> ./log/deploy_log
         kill -2 `cat ./pids/sinatra`
         ;;
       *)
