@@ -1,3 +1,4 @@
+
 ### Crazy Train Deploy Daemon
 This is how you run this:
 
@@ -8,3 +9,5 @@ This is how you run this:
 - DEPLOY_DIR : "/path/to/statics/directory"
 ```
 3. Profit $$$$
+
+> Not finished yet
