@@ -4,3 +4,4 @@ gem "sinatra"
 gem "jekyll"
 gem "netaddr"
 gem "passenger"
+gem 'bundler'

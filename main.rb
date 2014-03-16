@@ -5,6 +5,7 @@ require 'netaddr'
 require 'net/http'
 require 'socket'
 require  'yaml'
+require 'bundler/setup'
 
 # Set up and globals and process things
 configure do
@@ -60,23 +61,24 @@ post '/' do
     # To the temp dir! And clone
     tmpdir = "/tmp/" + body["after"]
     system "git clone https://github.com/rit-sse/crazy-train.git #{tmpdir}"
-    Dir.chdir(tmpdir)
+    Dir.chdir(tmpdir) do
 
 
-    # Get the deps
-    system "bundle install"
-    system "npm install"
+      Bundler.with_clean_env do
+        # Get the deps
+        system 'bundle install'
+        system 'npm install'
+      end
 
-    # Build the site
-    conf = Jekyll.configuration({
-      'source'      => tmpdir,
-      'destination' => settings.DEPLOY_DIR
-    })
-    puts "Building site..."
-    Jekyll::Site.new(conf).process
+      # Build the site
+      conf = Jekyll.configuration({
+        'source'      => tmpdir,
+        'destination' => settings.DEPLOY_DIR
+      })
+      puts "Building site..."
+      Jekyll::Site.new(conf).process
+    end
 
-    # Let's get out of here.
-    Dir.chdir("/tmp")
 
     # Get the extra stuff out
     FileUtils.rm_rf(tmpdir)
