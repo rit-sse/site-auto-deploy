@@ -6,7 +6,7 @@ This is how you run this:
 2. Add the deploy directory to said file:
 
 ```
-- DEPLOY_DIR : "/path/to/statics/directory"
+DEPLOY_DIR : "/path/to/statics/directory"
 ```
 3. Profit $$$$
 

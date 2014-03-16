@@ -1,6 +1,6 @@
 require 'sinatra'
 require 'jekyll'
-require 'JSON'
+require 'json'
 require 'netaddr'
 require 'net/http'
 require 'socket'
@@ -9,7 +9,6 @@ require  'yaml'
 # Set up and globals and process things
 configure do
   config = YAML.load_file ".config.yml"
-  config = config[0]
   if config["DEPLOY_DIR"] != nil
     set :DEPLOY_DIR, config["DEPLOY_DIR"]
   else
