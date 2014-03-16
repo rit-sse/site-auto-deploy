@@ -69,14 +69,8 @@ post '/' do
         system 'bundle install'
         system 'npm install'
 
-
-        # Build the site
-        conf = Jekyll.configuration({
-          'source'      => tmpdir,
-          'destination' => settings.DEPLOY_DIR
-        })
         puts "Building site..."
-        Jekyll::Site.new(conf).process
+        system "jekyll build --destination #{settings.DEPLOY_DIR}"
       end
     end
 
