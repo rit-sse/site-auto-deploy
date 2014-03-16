@@ -68,15 +68,16 @@ post '/' do
         # Get the deps
         system 'bundle install'
         system 'npm install'
-      end
 
-      # Build the site
-      conf = Jekyll.configuration({
-        'source'      => tmpdir,
-        'destination' => settings.DEPLOY_DIR
-      })
-      puts "Building site..."
-      Jekyll::Site.new(conf).process
+
+        # Build the site
+        conf = Jekyll.configuration({
+          'source'      => tmpdir,
+          'destination' => settings.DEPLOY_DIR
+        })
+        puts "Building site..."
+        Jekyll::Site.new(conf).process
+      end
     end
 
 
