@@ -44,8 +44,10 @@ post '/' do
 
   body = JSON.parse request.body.read
   user_agent = request.user_agent
-
-  check_ip = Net::HTTP.get(URI.parse('https://api.github.com/meta'))
+  url = URI.parse('https://api.github.com/meta')
+  http = Net::HTTP.new(url.host, url.port)
+  http.use_ssl = true
+  check_ip = http.get('/meta').body
   valid_ips = JSON.parse(check_ip)
   mask = valid_ips["hooks"][0]
   puts mask
