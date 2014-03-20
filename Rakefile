@@ -23,7 +23,7 @@ namespace :govdocs do
     end
   end
 
-  task :unjekyllify, :src do |t, args| do
+  task :unjekyllify, :src do |t, args|
     Dir.chdir("/#{args[:src]}/governing-docs") do
       sh 'git checkout .'
     end
