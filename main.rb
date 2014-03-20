@@ -67,12 +67,31 @@ post '/' do
       puts "Starting Deploy..."
       Bundler.with_clean_env do
         # Get the deps
-        system 'rake setup'
-        system "rake govdocs:jekyllify\[#{settings.src_dir}\]"
+        Dir.chdir('/web') do
+          system 'git pull'
+          Dir.chdir('governing-docs') do
+            system 'git pull origin master'
+            system 'git submodule update'
+          end
+          system 'bundle install'
+          system 'npm install'
 
-        puts "Building site..."
-        system "jekyll build --source #{settings.src_dir} --destination #{settings.deploy_dir}"
-        system "rake govdocs:unjekyllify\[#{settings.src_dir}\]"
+          Dir.chdir('governing-docs') do
+            constituion = File.open('constitution.md').read
+            popol = File.open('primary-officers-policy.md').read
+            constitution = "---\nlayout: page\ntitle: \nsidebars: _constitution\n---\n#{constitution}"
+            popol = "---\nlayout: page\ntitle: \nsidebars:\n- _constitution\n---\n#{popol}"
+
+            File.open('constitution.md', 'w').puts(constitution)
+            File.open('primary-officers-policy', 'w').puts(popol)
+          end
+
+          puts "Building site..."
+          system "jekyll build --source #{settings.src_dir} --destination #{settings.deploy_dir}"
+          Dir.chdir('governing-docs') do
+            system "git checkout ."
+          end
+        end
       end
     end
   end
