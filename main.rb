@@ -62,7 +62,7 @@ post '/' do
 
   # Make sure it's github!
   if netmask.contains?(request.ip) and user_agent =~ /^GitHub Hookshot/
-    if (request['X-Github-Event'] == 'push' and body['ref'] == 'refs/heads/master') || request['X-Github-Event'] == 'release'
+    if (request.env['X-Github-Event'] == 'push' and body['ref'] == 'refs/heads/master') or request.env['X-Github-Event'] == 'release'
       puts "Starting Deploy..."
       Bundler.with_clean_env do
         # Get the deps
