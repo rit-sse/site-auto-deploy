@@ -2,7 +2,7 @@ desc 'pull all the things'
 task :setup do
   Dir.chdir('/web') do
     sh 'git pull'
-    Dir.chdir('/governing-docs') do
+    Dir.chdir('governing-docs') do
       sh 'git pull origin master'
       sh 'git submodule update'
     end
