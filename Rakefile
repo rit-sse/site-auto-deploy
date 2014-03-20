@@ -2,8 +2,9 @@ desc 'pull all the things'
 task :setup do
   Dir.chdir('/web') do
     sh 'git pull'
-    sh 'git fetch governing-docs master'
-    sh 'git subtree pull --prefix governing-docs governing-docs master --squash'
+    Dir.chdir('/governing-docs') do
+      sh 'git pull origin master'
+    end
     sh 'bundle install'
     sh 'npm install'
   end
