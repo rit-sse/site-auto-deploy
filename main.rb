@@ -71,7 +71,7 @@ post '/' do
         system "rake govdocs:jekyllify\[#{settings.src_dir}\]"
 
         puts "Building site..."
-        system "jekyll build --destination #{settings.deploy_dir}"
+        system "jekyll build --source #{settings.src_dir} --destination #{settings.deploy_dir}"
         system "rake govdocs:unjekyllify\[#{settings.src_dir}\]"
       end
     end
