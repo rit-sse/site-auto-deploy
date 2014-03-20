@@ -22,8 +22,6 @@ configure do
     set :src_dir, '/web'
   end
 
-  set :hooks, config["hooks"]
-
   dir = "./pids/"
   file = dir + "sinatra"
   Dir.mkdir(dir) unless File.exists?(dir)
