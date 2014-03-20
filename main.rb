@@ -16,7 +16,7 @@ configure do
     set :deploy_dir, "/_site"
   end
 
-  unless config["deploy_dir"].nil?
+  unless config["src_dir"].nil?
     set :src_dir, config["src_dir"]
   else
     set :src_dir, '/web'
@@ -68,11 +68,11 @@ post '/' do
       Bundler.with_clean_env do
         # Get the deps
         system 'rake setup'
-        system "rake govdocs:jekyllify['#{settings.src_dir}']"
+        system "rake govdocs:jekyllify\[#{settings.src_dir}\]"
 
         puts "Building site..."
         system "jekyll build --destination #{settings.deploy_dir}"
-        system "rake govdocs:unjekyllify['#{settings.src_dir}']"
+        system "rake govdocs:unjekyllify\[#{settings.src_dir}\]"
       end
     end
   end

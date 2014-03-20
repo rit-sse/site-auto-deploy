@@ -4,6 +4,7 @@ task :setup do
     sh 'git pull'
     Dir.chdir('/governing-docs') do
       sh 'git pull origin master'
+      sh 'git submodule update'
     end
     sh 'bundle install'
     sh 'npm install'
