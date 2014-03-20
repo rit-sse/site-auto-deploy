@@ -10,11 +10,19 @@ require 'bundler/setup'
 # Set up and globals and process things
 configure do
   config = YAML.load_file ".config.yml"
-  if config["DEPLOY_DIR"] != nil
-    set :DEPLOY_DIR, config["DEPLOY_DIR"]
+  unless config["deploy_dir"].nil?
+    set :deploy_dir, config["deploy_dir"]
   else
-    set :DEPLOY_DIR, "~/_site"
+    set :deploy_dir, "/_site"
   end
+
+  unless config["deploy_dir"].nil?
+    set :src_dir, config["src_dir"]
+  else
+    set :src_dir, '/web'
+  end
+
+  set :hooks, config["hooks"]
 
   dir = "./pids/"
   file = dir + "sinatra"
@@ -26,7 +34,7 @@ configure do
     f.write(Process.pid.to_s)
   end
 
-  puts "Your site will deploy to #{settings.DEPLOY_DIR}"
+  puts "Your site will deploy to #{settings.deploy_dir}"
 end
 
 Signal.trap("USR1") do
@@ -55,29 +63,19 @@ post '/' do
   netmask = NetAddr::CIDR.create(mask)
 
   # Make sure it's github!
-  if netmask.contains?(request.ip) and user_agent =~ /^GitHub Hookshot/ and body["ref"] == "refs/heads/master"
-    puts "Starting Deploy..."
-
-    # To the temp dir! And clone
-    tmpdir = "/tmp/" + body["after"]
-    system "git clone https://github.com/rit-sse/crazy-train.git #{tmpdir}"
-    Dir.chdir(tmpdir) do
-
-
+  if netmask.contains?(request.ip) and user_agent =~ /^GitHub Hookshot/
+    if hooks.include?({"#{body['repository']['owner']['name']}/#{body['repository']['name']}" => request['X-Github-Event']})
+      puts "Starting Deploy..."
       Bundler.with_clean_env do
         # Get the deps
-        system 'bundle install'
-        system 'npm install'
+        system 'rake setup'
+        system "rake govdocs:jekyllify['#{settings.src_dir}']"
 
         puts "Building site..."
-        system "jekyll build --destination #{settings.DEPLOY_DIR}"
+        system "jekyll build --destination #{settings.deploy_dir}"
+        system "rake govdocs:unjekyllify['#{settings.src_dir}']"
       end
     end
-
-
-    # Get the extra stuff out
-    FileUtils.rm_rf(tmpdir)
-
   end
 
   # KK we good

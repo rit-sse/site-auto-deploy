@@ -6,7 +6,11 @@ This is how you run this:
 2. Add the deploy directory to said file:
 
 ```
-DEPLOY_DIR : "/path/to/statics/directory"
+deploy_dir: /path/to/statics/directory
+src_dir: /path/to/src/directory
+hooks:
+- owner/repo: event
+- owner/another_repo: another_event
 ```
 3. Profit $$$$
 
