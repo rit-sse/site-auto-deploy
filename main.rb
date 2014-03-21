@@ -62,7 +62,6 @@ post '/' do
 
   # Make sure it's github!
   if netmask.contains?(request.ip) and user_agent =~ /^GitHub Hookshot/
-    puts request.env
     if (request.env['HTTP_X_GITHUB_EVENT'] == 'push' and body['ref'] == 'refs/heads/master') or request.env['HTTP_X_GITHUB_EVENT'] == 'release'
       puts "Starting Deploy..."
       Bundler.with_clean_env do
@@ -70,9 +69,6 @@ post '/' do
         Dir.chdir('/web') do
           system 'git pull'
           system 'git submodule foreach git pull origin master'
-          Dir.chdir('governing-docs') do
-            system 'git pull origin master'
-          end
           system 'bundle install'
           system 'npm install'
 
