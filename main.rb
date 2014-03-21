@@ -77,7 +77,7 @@ post '/' do
           system 'npm install'
 
           Dir.chdir('governing-docs') do
-            constituion = File.open('constitution.md').read
+            constitution = File.open('constitution.md').read
             popol = File.open('primary-officers-policy.md').read
             constitution = "---\nlayout: page\ntitle: \nsidebars: _constitution.html\npermalink: constitution/\n---\n#{constitution}"
             popol = "---\nlayout: page\ntitle: \nsidebars:\n- _constitution.html\npermalink: primary-officers-policy/\n---\n#{popol}"
