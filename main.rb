@@ -69,7 +69,7 @@ post '/' do
         # Get the deps
         Dir.chdir('/web') do
           system 'git pull'
-          system 'git submodule update'
+          system 'git submodule foreach git pull origin master'
           Dir.chdir('governing-docs') do
             system 'git pull origin master'
           end
