@@ -69,9 +69,9 @@ post '/' do
         # Get the deps
         Dir.chdir('/web') do
           system 'git pull'
+          system 'git submodule update'
           Dir.chdir('governing-docs') do
             system 'git pull origin master'
-            system 'git submodule update'
           end
           system 'bundle install'
           system 'npm install'
