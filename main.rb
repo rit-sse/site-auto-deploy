@@ -84,6 +84,7 @@ post '/' do
 
           puts "Building site..."
           system "jekyll build --source #{settings.src_dir} --destination #{settings.deploy_dir}"
+          system 'rake server:start'
           Dir.chdir('governing-docs') do
             system "git checkout ."
           end
