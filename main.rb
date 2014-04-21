@@ -21,6 +21,7 @@ configure do
   else
     set :src_dir, '/web'
   end
+  se :hooks, config['hooks']
 
   dir = "./pids/"
   file = dir + "sinatra"
@@ -62,7 +63,7 @@ post '/' do
 
   # Make sure it's github!
   if netmask.contains?(request.ip) and user_agent =~ /^GitHub Hookshot/
-    if (request.env['HTTP_X_GITHUB_EVENT'] == 'push' and body['ref'] == 'refs/heads/master') or request.env['HTTP_X_GITHUB_EVENT'] == 'release'
+    if( request.env['HTTP_X_GITHUB_EVENT'] == 'push' and hooks.include?({body['repository']['name'] => body['ref']}) )
       puts "Starting Deploy..."
       Bundler.with_clean_env do
         # Get the deps
