@@ -21,7 +21,7 @@ configure do
   else
     set :src_dir, '/web'
   end
-  se :hooks, config['hooks']
+  set :hooks, config['hooks']
 
   dir = "./pids/"
   file = dir + "sinatra"
