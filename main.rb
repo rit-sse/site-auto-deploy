@@ -62,7 +62,7 @@ post '/' do
   netmask = NetAddr::CIDR.create(mask)
 
   # Make sure it's github!
-  if netmask.contains?(request.ip) and user_agent =~ /^GitHub Hookshot/
+  if user_agent =~ /^GitHub Hookshot/
     if( request.env['HTTP_X_GITHUB_EVENT'] == 'push' and settings.hooks.include?({body['repository']['name'] => body['ref']}) )
       puts "Starting Deploy..."
       Bundler.with_clean_env do
@@ -88,7 +88,11 @@ post '/' do
           FileUtils.rm_r('assets/images/posts', force: true)
           FileUtils.cp_r('_posts/images/.', 'assets/images/posts')
           puts "Building site..."
-          system "jekyll build --source #{settings.src_dir} --destination #{settings.deploy_dir}"
+          success = system "jekyll build --source #{settings.src_dir} --destination /tmp/#{body['head_commit']['id']}"
+          if(success)
+            FileUtils.rm_r("#{settings.deploy_dir}/*")
+            FileUtils.cp_r("/tmp/#{body['head_commit']['id']}/.", settings.deploy_dir)
+          end
           Dir.chdir('governing-docs') do
             system "git checkout ."
           end
