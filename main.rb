@@ -83,6 +83,7 @@ post '/' do
             File.open('primary-officers-policy.md', 'w'){|f| f.write(popol)}
           end
 
+          FileUtils.cp_r('_posts/images/.', "assets/images/posts", :force)
           puts "Building site..."
           system "jekyll build --source #{settings.src_dir} --destination #{settings.deploy_dir}"
           Dir.chdir('governing-docs') do
