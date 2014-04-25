@@ -82,7 +82,7 @@ post '/' do
             File.open('constitution.md', 'w') {|f| f.write(constitution)}
             File.open('primary-officers-policy.md', 'w'){|f| f.write(popol)}
           end
-          FileUtils.rm_r 'assets/images/posts', :force
+          FileUtils.rm_r('assets/images/posts', force: true)
           FileUtils.cp_r('_posts/images/.', 'assets/images/posts')
           puts "Building site..."
           system "jekyll build --source #{settings.src_dir} --destination #{settings.deploy_dir}"
