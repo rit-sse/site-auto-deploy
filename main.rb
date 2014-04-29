@@ -90,7 +90,7 @@ post '/' do
           puts "Building site..."
           success = system "LC_ALL=en_US.UTF-8 jekyll build --source #{settings.src_dir} --destination /tmp/#{body['head_commit']['id']}"
           if(success)
-            FileUtils.rm_r("#{settings.deploy_dir}/*")
+            FileUtils.rm_r(Dir.glob("#{settings.deploy_dir}/*"))
             FileUtils.cp_r("/tmp/#{body['head_commit']['id']}/.", settings.deploy_dir)
           end
           Dir.chdir('governing-docs') do
