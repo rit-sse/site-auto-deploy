@@ -27,10 +27,15 @@ GEM
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
       rb-kqueue (>= 0.2)
+    mail (2.5.4)
+      mime-types (~> 1.16)
+      treetop (~> 1.4.8)
     maruku (0.7.1)
+    mime-types (1.25)
     netaddr (1.5.0)
     parslet (1.5.0)
       blankslate (~> 2.0)
+    polyglot (0.3.3)
     posix-spawn (0.3.8)
     pygments.rb (0.5.4)
       posix-spawn (~> 0.3.6)
@@ -53,6 +58,9 @@ GEM
     tilt (1.4.1)
     toml (0.1.0)
       parslet (~> 1.5.0)
+    treetop (1.4.15)
+      polyglot
+      polyglot (>= 0.3.1)
     unicorn (4.6.3)
       kgio (~> 2.6)
       rack
@@ -65,6 +73,7 @@ PLATFORMS
 DEPENDENCIES
   bundler
   jekyll
+  mail
   netaddr
   sinatra
   unicorn

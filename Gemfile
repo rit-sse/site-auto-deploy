@@ -5,3 +5,4 @@ gem "jekyll"
 gem "netaddr"
 gem "unicorn"
 gem 'bundler'
+gem "mail"

@@ -32,8 +32,12 @@ configure do
   File.open(file, 'w+') do |f|
     f.write(Process.pid.to_s)
   end
+  Mail.defaults do
+    delivery_method :smtp, address: "smtp-server.rit.edu", port: 25
+  end
 
   puts "Your site will deploy to #{settings.deploy_dir}"
+
 end
 
 Signal.trap("USR1") do
@@ -92,6 +96,13 @@ post '/' do
           if(success)
             FileUtils.rm_r(Dir.glob("#{settings.deploy_dir}/*"))
             FileUtils.cp_r("/tmp/#{body['head_commit']['id']}/.", settings.deploy_dir)
+          else
+            Mail.deliver do
+              from     'noreply@sse.se.rit.edu'
+              to       body["pusher"]["email"]
+              subject  'The site failed to build'
+              body     "Your most recent post to the website didn't properly build. Test it locally and fix your mistake."
+            end
           end
           Dir.chdir('governing-docs') do
             system "git checkout ."
