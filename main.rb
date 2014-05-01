@@ -101,7 +101,7 @@ post '/' do
               from     'noreply@sse.se.rit.edu'
               to       body["pusher"]["email"]
               subject  'The site failed to build'
-              body     "Your most recent post to the website didn't properly build. Test it locally and fix your mistake."
+              body     "Your most recent push to the website didn't properly build. Test it locally and fix your mistake."
             end
           end
           Dir.chdir('governing-docs') do
