@@ -6,6 +6,7 @@ require 'net/http'
 require 'socket'
 require  'yaml'
 require 'bundler/setup'
+require 'mail'
 
 # Set up and globals and process things
 configure do
