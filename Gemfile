@@ -6,3 +6,4 @@ gem "netaddr"
 gem "unicorn"
 gem 'bundler'
 gem "mail"
+gem 'dotenv'
