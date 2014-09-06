@@ -78,7 +78,7 @@ post '/' do
       # Get the deps
       Dir.chdir('/web') do
         system 'git pull'
-        system 'git submodule foreach git pull origin master'
+        system 'git submodule update --remote'
         system 'bundle install'
         system 'npm install'
 
