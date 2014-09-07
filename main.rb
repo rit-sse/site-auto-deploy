@@ -81,6 +81,7 @@ post '/' do
         system 'git submodule update --remote'
         system 'bundle install'
         system 'npm install'
+        system 'bower install'
 
         Dir.chdir('governing-docs') do
           constitution = File.open('constitution.md').read
